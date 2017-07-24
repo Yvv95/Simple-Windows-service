@@ -12,10 +12,14 @@ namespace ValutesService
     public class DBMethods
     {
         //static string connectionString = @"Data Source=106PC0051;Initial Catalog=ExchRates;Integrated Security=True";
-
-        private  string connectionString =
-            //@"Data Source=.\SQLEXPRESS;Initial Catalog=ExchRates;Integrated Security=True";
-        @"Data Source=106PC0051;Initial Catalog=ExchRates;Integrated Security=True";
+        
+        private string connectionString = "";
+        //@"Data Source=.\SQLEXPRESS;Initial Catalog=ExchRates;Integrated Security=True";
+        //@"Data Source=106PC0051;Initial Catalog=ExchRates;Integrated Security=True";
+        public DBMethods(string constr)
+        {
+            this.connectionString = constr;
+        }
         public void CreateEnumValute(EnumValutes[] toLoad)
         {
             //название хранимой процедуры
@@ -143,15 +147,15 @@ namespace ValutesService
                     }
                     catch (Exception)
                     {
-                        
+
                     }
                 }
             }
             return true;
         }
-        
 
-     
+
+
         public void GetEnumValutes()
         {
             //название процедуры
