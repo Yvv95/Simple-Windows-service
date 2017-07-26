@@ -13,7 +13,7 @@ using System.Threading.Tasks;
 using System.Timers;
 using System.Xml.Serialization;
 using ValutesService.XmlClasses;
-using Timer = System.Timers.Timer;
+
 
 namespace ValutesService
 {
@@ -60,7 +60,6 @@ namespace ValutesService
                 StartFunction();
             }).Start();
         }
-
         private void StartFunction()
         {
             while (isWorking)
@@ -92,7 +91,7 @@ namespace ValutesService
                     if ((differenceInDays <= 0))
                     {
                         lastUpdate = lastLoad;
-                        logger("Инфо", "Информация в БД актуальна. На "+lastLoad);
+                        logger("Инфо", "Информация в БД актуальна. На " + lastLoad);
                         tmp.Close();
                     }
                     else
@@ -109,14 +108,26 @@ namespace ValutesService
                             if (!codesList.ContainsKey(enumValute.ValsList[i].Vname.Trim()) &&
                                 (enumValute.ValsList[i].Vname != null) && (enumValute.ValsList[i].Vcode != null))
                                 codesList.Add(enumValute.ValsList[i].Vname.Trim(), enumValute.ValsList[i].Vcode.Trim());
-                            try
+                            if ((enumValute.ValsList[i].Vcode.Trim() == "R01035") || (enumValute.ValsList[i].Vcode.Trim() == "R01095") || (enumValute.ValsList[i].Vcode.Trim() == "R01235") || (enumValute.ValsList[i].Vcode.Trim() == "R01239") || (enumValute.ValsList[i].Vcode.Trim() == "R01375") || (enumValute.ValsList[i].Vcode.Trim() == "R01770"))
                             {
-                                toLoad.CreateEnumValute(enumValute.ValsList);
+                                try
+                                {
+                                    toLoad.CreateEnumValute(enumValute.ValsList, @"C:\Users\Yusupov.V\Desktop\ValutesService\ValutesService\Images\"+ enumValute.ValsList[i].Vcode+".png");
+                                }
+                                catch (Exception e)
+                                {
+                                    logger("Ошибка", e.ToString());
+                                }
                             }
-                            catch (Exception e)
-                            {
-                                logger("Ошибка", e.ToString());
-                            }
+                            else
+                                try
+                                {
+                                    toLoad.CreateEnumValute(enumValute.ValsList);
+                                }
+                                catch (Exception e)
+                                {
+                                    logger("Ошибка", e.ToString());
+                                }
                         }
                         //Название-Код
                         foreach (string valCode in codesList.Keys)

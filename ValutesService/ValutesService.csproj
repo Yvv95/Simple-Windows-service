@@ -94,9 +94,7 @@
     <None Include="Properties\DataSources\System.Xml.XmlNode.datasource" />
     <None Include="Service References\CBRF\DailyInfo.wsdl" />
   </ItemGroup>
-  <ItemGroup>
-    <Folder Include="DataBaseMethods\" />
-  </ItemGroup>
+  <ItemGroup />
   <ItemGroup>
     <WCFMetadata Include="Service References\" />
   </ItemGroup>
@@ -129,6 +127,14 @@
       <ProductName>.NET Framework 3.5 SP1</ProductName>
       <Install>false</Install>
     </BootstrapperPackage>
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Images\R01235.png" />
+    <Content Include="Images\R01239.png" />
+    <Content Include="Images\R01375.png" />
+    <Content Include="Images\R01770.png" />
+    <Content Include="Images\R01095.png" />
+    <Content Include="Images\R01035.png" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

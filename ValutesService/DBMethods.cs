@@ -4,6 +4,7 @@ using System;
 using System.Collections.Generic;
 using System.Data;
 using System.Data.SqlClient;
+using System.IO;
 using ValutesService.XmlClasses;
 
 
@@ -63,6 +64,56 @@ namespace ValutesService
                 }
             }
         }
+
+        public void CreateEnumValute(EnumValutes[] toLoad, string imageToInsert)
+        {
+            //название хранимой процедуры
+            string sqlExpression = "sp_InsertEnumImage";
+            string sqlCheck = "sp_CheckName";
+            //здесь проверка на то, что уже есть в БД
+
+            byte[] imgData = File.ReadAllBytes(imageToInsert);
+
+            using (SqlConnection sqlConn = new SqlConnection(connectionString))
+            {
+                sqlConn.Open();
+                foreach (EnumValutes tmp in toLoad)
+                {
+                    var sqlCmd = new SqlCommand(sqlExpression, sqlConn);
+                    var sqlChkCmd = new SqlCommand(sqlCheck, sqlConn);
+
+                    sqlCmd.CommandType = CommandType.StoredProcedure;
+                    sqlChkCmd.CommandType = CommandType.StoredProcedure;
+
+                    sqlChkCmd.Parameters.AddWithValue("@code", tmp.Vcode.Trim());
+
+                    var reader = sqlChkCmd.ExecuteReader();
+
+                    if (!reader.HasRows)
+                    {
+                        reader.Dispose();
+                        sqlCmd.Parameters.AddWithValue("@Vcode", tmp.Vcode.Trim());
+                        sqlCmd.Parameters.AddWithValue("@Vname", tmp.Vname.Trim());
+                        sqlCmd.Parameters.AddWithValue("@VEngname", tmp.VEngname.Trim());
+                        sqlCmd.Parameters.AddWithValue("@Vnom", tmp.Vnom.Trim());
+                        sqlCmd.Parameters.AddWithValue("@VcommonCode", tmp.VcommonCode.Trim());
+                        sqlCmd.Parameters.AddWithValue("@VImage", imgData);
+                        if (tmp.VnumCode != null)
+                            sqlCmd.Parameters.AddWithValue("@VnumCode", tmp.VnumCode.Trim());
+                        else
+                            sqlCmd.Parameters.AddWithValue("@VnumCode", "");
+                        if (tmp.VcharCode != null)
+                            sqlCmd.Parameters.AddWithValue("@VcharCode", tmp.VcharCode.Trim());
+                        else
+                            sqlCmd.Parameters.AddWithValue("@VcharCode", "");
+                        sqlCmd.ExecuteNonQuery();
+                        
+                    }
+                    reader.Close();
+                }
+            }
+        }
+
 
         private int GetId(string valName)
         {
